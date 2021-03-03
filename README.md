@@ -1,5 +1,4 @@
 # devops-netology
-
 Will be ignore(by gitignore in /terraform):
 - Local .terraform directories
 - .tfstate files
