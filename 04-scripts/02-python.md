@@ -48,5 +48,35 @@ for result in result_os.split('\n'):
 
 Вопрос 4.
 ````   
+import json
+import socket
+import os
+
+services = ["drive.google.com", "mail.google.com", "google.com"]
+current_services_ip = {x: socket.gethostbyname(x) for x in services}
+
+check_file_path = "last_ip_check.json"
+last_services_ip = {}
+
+# read previous check results
+if os.path.exists(check_file_path):
+    with open(check_file_path, "r") as last_check_file:
+        last_services_ip = json.load(last_check_file)
+
+for service in services:
+    current_ip = current_services_ip[service]
+
+    print(f"{service} - {current_ip}")
+
+    # check current results with previous, if they are known
+    if len(last_services_ip.keys()) != 0:
+        last_ip = last_services_ip[service]
+
+        if current_ip != last_ip:
+            print(f"[ERROR] {service} IP mismatch: {last_ip} {current_ip}")
+
+# save current results
+with open(check_file_path, "w") as last_check_file:
+    json.dump(current_services_ip, last_check_file)
 
 ````   
