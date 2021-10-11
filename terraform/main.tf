@@ -23,11 +23,31 @@ locals {
     stage = "t3.micro"
     prod = "t3.large"
   }
+  web_instance_count_map = {
+    stage = 1
+    prod = 2
+  }
+  instances = {
+    "t3.micro" = data.aws_ami.ubuntu.id
+    "t3.large" = data.aws_ami.ubuntu.id
+  }
 }
 
 resource "aws_instance" "web" {
   ami = data.aws_ami.ubuntu.id
   instance_type = local.web_instance_type_map[terraform.workspace]
+  count = local.web_instance_count_map[terraform.workspace]
+
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
+resource "aws_instance" "web_for_each" {
+  for_each = local.instances
+
+  instance_type = each.key
+  ami = each.value
 }
 
 data "aws_caller_identity" "current" {}
