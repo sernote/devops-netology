@@ -1,0 +1,13 @@
+repos:
+- id: github.com/sernote/
+  workflow: default
+  allowed_overrides: [workflow]
+  allow_custom_workflows: true
+
+workflows:
+  default:
+    plan:
+      steps:
+      - init
+      - plan:
+          extra_args: ["-lock", "false"]
